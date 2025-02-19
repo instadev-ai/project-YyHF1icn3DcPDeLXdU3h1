@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const blogPosts = [
   {
@@ -26,8 +27,12 @@ const blogPosts = [
     `,
     tags: ["Web Development", "AI", "Technology Trends", "Edge Computing"]
   },
-  // Add more blog posts here...
 ];
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
 
 const BlogPostPage = () => {
   const { id } = useParams();
@@ -37,7 +42,13 @@ const BlogPostPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-2xl font-bold text-gray-900">Post not found</h1>
+          <motion.h1 
+            className="text-2xl font-bold text-gray-900"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            Post not found
+          </motion.h1>
         </div>
       </div>
     );
@@ -45,49 +56,84 @@ const BlogPostPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <motion.article 
+        className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.2
+            }
+          }
+        }}
+      >
         <header className="mb-8">
-          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+          <motion.div 
+            className="flex items-center space-x-2 text-sm text-gray-500 mb-4"
+            variants={fadeIn}
+          >
             <span>{post.category}</span>
             <span>•</span>
             <span>{post.readTime}</span>
             <span>•</span>
             <span>{post.date}</span>
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{post.title}</h1>
-          <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0">
+          </motion.div>
+          
+          <motion.h1 
+            className="text-4xl font-bold text-gray-900 mb-4"
+            variants={fadeIn}
+          >
+            {post.title}
+          </motion.h1>
+          
+          <motion.div 
+            className="flex items-center space-x-4"
+            variants={fadeIn}
+          >
+            <motion.div 
+              className="flex-shrink-0"
+              whileHover={{ scale: 1.1 }}
+            >
               <img
                 className="h-10 w-10 rounded-full"
                 src="https://via.placeholder.com/40"
                 alt={post.author}
               />
-            </div>
+            </motion.div>
             <div className="text-sm">
               <p className="text-gray-900 font-medium">{post.author}</p>
               <p className="text-gray-500">Web Developer</p>
             </div>
-          </div>
+          </motion.div>
         </header>
 
-        <div 
+        <motion.div 
           className="prose prose-lg max-w-none"
+          variants={fadeIn}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
-        <footer className="mt-8 pt-8 border-t border-gray-200">
+        <motion.footer 
+          className="mt-8 pt-8 border-t border-gray-200"
+          variants={fadeIn}
+        >
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag) => (
-              <span
+              <motion.span
                 key={tag}
                 className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
+                whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 {tag}
-              </span>
+              </motion.span>
             ))}
           </div>
-        </footer>
-      </article>
+        </motion.footer>
+      </motion.article>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 const blogPosts = [
   {
@@ -36,41 +37,80 @@ const blogPosts = [
   }
 ];
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
 const BlogPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Thoughts, insights, and perspectives on web development, design, and technology.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
           {blogPosts.map((post) => (
-            <Card key={post.id} className="hover:shadow-lg transition-shadow duration-300">
-              <CardHeader>
-                <div className="flex justify-between items-start mb-2">
-                  <span className="text-sm text-teal-600 font-medium">
-                    {post.category}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {post.readTime}
-                  </span>
-                </div>
-                <CardTitle className="text-xl font-bold">{post.title}</CardTitle>
-                <CardDescription>{post.date}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">{post.description}</p>
-                <button className="text-teal-600 hover:text-teal-700 font-medium">
-                  Read More →
-                </button>
-              </CardContent>
-            </Card>
+            <motion.div key={post.id} variants={item}>
+              <motion.div
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="hover:shadow-lg transition-shadow duration-300">
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
+                      <motion.span
+                        className="text-sm text-teal-600 font-medium"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        {post.category}
+                      </motion.span>
+                      <span className="text-sm text-gray-500">
+                        {post.readTime}
+                      </span>
+                    </div>
+                    <CardTitle className="text-xl font-bold">{post.title}</CardTitle>
+                    <CardDescription>{post.date}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">{post.description}</p>
+                    <motion.button
+                      className="text-teal-600 hover:text-teal-700 font-medium"
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      Read More →
+                    </motion.button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
